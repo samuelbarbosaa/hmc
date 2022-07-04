@@ -344,9 +344,13 @@
 <h2>Sumário</h2>
 <ol type="1">
 <li><p>Introdução</p>
-<p>Referências, contexto e exemplo inicial</p></li>
+<ol type="1">
+<li>Referências, contexto e exemplo inicial</li>
+</ol></li>
 <li><p>Hamiltonian Monte Carlo</p>
-<p>HMC, Amostragem no HMC, Dinâmica Hamiltoniana, Discretização e Exemplo</p></li>
+<ol type="1">
+<li>HMC, Amostragem no HMC, Dinâmica Hamiltoniana, Discretização e Exemplo</li>
+</ol></li>
 <li><p>Código</p></li>
 </ol>
 </section>
@@ -373,16 +377,41 @@
 </section>
 <section id="contexto" class="slide level2">
 <h2>Contexto</h2>
+<div style="font-size: 0.8em">
 <ul>
-<li><strong>Markov Chain Monte Carlo (MCMC)</strong> originated with the classic paper of <strong>Metropolis et al.&nbsp;(1953)</strong>, where it was used to <strong>simulate the distribution of states</strong> for a system of idealized molecules.</li>
-<li>Not long after, <strong>another approach to molecular simulation</strong> was introduced (<strong>Alder and Wainwright, 1959</strong>), in which the motion of the molecules was deterministic, following Newton’s laws of motion, which have an elegant formalization as <strong>Hamiltonian dynamics</strong>.</li>
+<li><p><strong>Markov Chain Monte Carlo (MCMC)</strong> originou-se com o artigo clássico <strong>Metropolis et al.&nbsp;(1953)</strong><sup>1</sup>, em que foi usado para <strong>simular</strong> a <strong>distribuição de estados</strong> para um sistema de <strong>moléculas</strong> idealizadas.</p>
+<table>
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><img data-src="images/paste-07BD8334.png" width="358"></td>
+<td><img data-src="images/paste-793AD6DF.png" width="376"></td>
+</tr>
+</tbody>
+</table></li>
 </ul>
-</section>
+<!-- -->
+<ul>
+<li><p>Los Alamos, Manhattan Project.</p></li>
+<li><p><strong>Maniac I</strong>: 5kb de memória, 70k multiplicações por segundo</p></li>
+</ul>
+</div>
+<aside><ol class="aside-footnotes"><li id="fn1" role="doc-endnote"><p>Equation of State Calculations by Fast Computing Machines. Nicholas Metropolis, Arianna W. Rosenbluth, Marshall N. Rosenbluth, and Augusta H. Teller</p></li></ol></aside></section>
 <section id="contexto-1" class="slide level2">
 <h2>Contexto</h2>
 <ul>
-<li>In <strong>1987</strong>, a landmark paper by Duane, Kennedy, Pendleton, and Roweth <strong>united the MCMC and molecular dynamics approaches</strong>. They called their method “Hybrid Monte Carlo”, which abbreviates to “HMC”, but the phrase “<strong>Hamiltonian Monte Carlo</strong>”, retaining the abbreviation, is more specific and descriptive. (Neal, 2011)</li>
-<li>HMC still seems to be under-appreciated by statisticians, and perhaps also by physicists outside the lattice field theory community. (Neal, 2011)</li>
+<li>Not long after, <strong>another approach to molecular simulation</strong> was introduced (<strong>Alder and Wainwright, 1959</strong>), in which the motion of the molecules was deterministic, following Newton’s laws of motion, which have an elegant formalization as <strong>Hamiltonian dynamics</strong>.</li>
+</ul>
+</section>
+<section id="contexto-2" class="slide level2">
+<h2>Contexto</h2>
+<ul>
+<li>In <strong>1987</strong>, a landmark paper by Duane, Kennedy, Pendleton, and Roweth <strong>united the MCMC and molecular dynamics approaches</strong>.</li>
+<li>They called their method “Hybrid Monte Carlo”, which abbreviates to “HMC”, but the phrase “<strong>Hamiltonian Monte Carlo</strong>”, retaining the abbreviation, is more specific and descriptive.</li>
+<li>HMC still seems to be under-appreciated by statisticians, and perhaps also by physicists outside the lattice field theory community. (Neal 2011)</li>
 </ul>
 </section>
 <section id="exemplo" class="slide level2">
@@ -392,7 +421,7 @@
 
 </div>
 <p><span class="math display">\[
-\pi(\theta) = \kappa \exp\left\{-0.5(\theta_1^2\theta_2^2+\theta_1^2+\theta_2^2-8\theta_1-8\theta_2\right\}
+\pi(\theta) = \kappa \exp\left\{-0.5(\theta_1^2\theta_2^2+\theta_1^2+\theta_2^2-8\theta_1-8\theta_2\right)\}
 \]</span></p>
 
 <img data-src="hmc_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"></section>
@@ -411,7 +440,7 @@
 </section>
 <section id="hamiltonian-monte-carlo-1" class="slide level2">
 <h2>Hamiltonian Monte Carlo</h2>
-<p>O HMC pode ser visto como versão do Metropolis Hastings que introduz propostas distantes do estado atual mas, ainda assim, com alta probabilidade de aceitação.</p>
+<p>O HMC pode ser visto como uma versão do Metropolis Hastings que introduz propostas distantes do estado atual mas, ainda assim, com alta probabilidade de aceitação.</p>
 </section>
 <section id="metropolis-metropolis-hastings" class="slide level2">
 <h2>Metropolis, Metropolis-Hastings</h2>
@@ -436,7 +465,9 @@ H(\theta,M) = U(\theta) + K(\rho) = \text{constante}
 <h2>Hamiltonian Monte Carlo</h2>
 <ul>
 <li><p>Na física, em duas dimensões, a dinâmica hamiltoniana pode ser visualizada como o movimento de uma partícula, sem fricção, em uma superfície de altura variada.</p></li>
-<li><p>Nesse caso, <span class="math inline">\(U(\theta)\)</span> é a energia potencial, proporcional à altura da superfície no local da partícula, e <span class="math inline">\(K(\rho)\)</span> é a energia cinética, dada por <span class="math inline">\(K(\rho) = \frac{1}{2}\rho^\top M^{-1} \rho\)</span>. Nesta equação, <span class="math inline">\(M\)</span> corresponde à “matriz massa” do sistema, sendo simétrica, positiva definida, tipicamente diagonal e frequentemente um múltiplo escalar da matriz identidade.</p></li>
+<li><p><span class="math inline">\(U(\theta)\)</span> é a energia potencial (proporcional à altura da superfície)</p></li>
+<li><p><span class="math inline">\(K(\rho)\)</span> é a energia cinética, dada por <span class="math inline">\(K(\rho) = \frac{1}{2}\rho^\top M^{-1} \rho\)</span>.</p></li>
+<li><p><span class="math inline">\(M\)</span> corresponde à “matriz massa” do sistema, sendo simétrica, positiva definida, tipicamente diagonal e frequentemente múltiplo escalar da matriz identidade.</p></li>
 </ul>
 </section>
 <section id="hamiltonian-monte-carlo-4" class="slide level2">
@@ -453,7 +484,9 @@ p(\theta, \rho) \propto &amp; \,\, \exp\{ -H(\theta, \rho) / T \} \\
 = &amp; \,\, \exp\{ -[U(\theta) + K(\rho)] / T \}
 \end{align*}
 \]</span></p></li>
-<li><p>No MCMC, a posição corresponde à variável de interesse. A energia potencial é convenientemente escolhida como <span class="math inline">\(U(\theta) = -\log p(y,\theta) = -k \log [p(\theta|y) p(\theta)]\)</span>. As variáveis de momento são introduzidas artificialmente.</p></li>
+<li><p>No MCMC, a posição corresponde à variável de interesse.</p></li>
+<li><p>A energia potencial é convenientemente escolhida como <span class="math inline">\(U(\theta) = -\log p(y,\theta) = -k \log [p(\theta|y) p(\theta)]\)</span>.</p></li>
+<li><p>As variáveis de momento são introduzidas artificialmente.</p></li>
 </ul>
 </section>
 <section id="hamiltonian-monte-carlo-6" class="slide level2">
@@ -613,6 +646,7 @@ Neal, Radford. 2011. <span>“MCMC Using Hamiltonian Dynamics.”</span> In. Cha
 </div>
 </div>
 </section></section>
+
     </div>
   </div>
 

@@ -1,0 +1,22 @@
+/*-- scss:defaults --*/
+
+$font-size: 0.6em;
+
+/*-- scss:rules --*/
+
+.reveal section p {
+    display: inline-block;
+    font-size: 1em;
+    line-height: 1.2em;
+    vertical-align: top;
+  }
+
+.reveal li {
+    font-size: .9em;
+    margin-top: 10px;
+  }
+
+.reveal .slide blockquote {
+  border-left: 3px solid $text-muted;
+  padding-left: 0.5em;
+}
