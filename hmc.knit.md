@@ -5,6 +5,7 @@ editor: visual
 bibliography: references.bib
 ---
 
+
 ## Sumário
 
 1.  Introdução
@@ -47,106 +48,41 @@ bibliography: references.bib
 
 [Hedibert Lopes](http://hedibert.org/wp-content/uploads/2021/02/hmc-example.html)
 
-```{r}
-post = function(theta) {
-  exp(-0.5*(prod(theta)^2+sum(theta^2)-8*sum(theta)))
-}
 
-gradient = function(theta) {
-  c(-theta[1]*theta[2]^2+theta[1]-4,
-    -theta[2]*theta[1]^2+theta[2]-4)
-}
+::: {.cell}
 
-leapfrog = function(theta,p,eps,iM) {
-  p     = p     + (eps/2)*gradient(theta)
-  theta = theta + eps*iM%*%p
-  p     = p     +  (eps/2)*gradient(theta)
-  return(list(theta=theta,p=p))
-}
-```
+:::
 
 $$
 \pi(\theta) = \kappa \exp\left\{-0.5(\theta_1^2\theta_2^2+\theta_1^2+\theta_2^2-8\theta_1-8\theta_2\right\}
 $$
 
-```{r}
-ngrid = 200
-th1 = seq(-1,7,length=ngrid)
-th2 = seq(-1,7,length=ngrid)
-f = matrix(0,ngrid,ngrid)
-for (i in 1:ngrid)
- for (j in 1:ngrid)
-   f[i,j] = post(c(th1[i],th2[j]))
-   
-contour(th1,th2,f,drawlabels=FALSE,xlab=expression(theta[1]),ylab=expression(theta[2]))
-title("Target distribution")
-```
+::: {.cell}
+::: {.cell-output-display}
+![](hmc_files/figure-revealjs/unnamed-chunk-4-1.png){width=960}
+:::
+:::
+
 
 ## Distribuições marginais
 
-```{r}
-plot(th1, colSums(f)/sum(f), type="l", xlab = expression(theta[1]), ylab="Density")
-```
+
+::: {.cell}
+::: {.cell-output-display}
+![](hmc_files/figure-revealjs/unnamed-chunk-6-1.png){width=960}
+:::
+:::
+
 
 ## Metropolis Hastings e HMC
 
-```{r}
-sd.th  = 0.1
-burnin = 10000
-N      = 10000
-niter  = burnin + N
-thetas.rwmh = matrix(0,niter,2)
-theta = c(0,0)
-set.seed(32425)
-for (iter in 1:niter){
-  theta.new = rnorm(2,theta,sd.th)
-  accept = min(1,post(theta.new)/post(theta))
-  if (runif(1)<accept){
-    theta = theta.new
-  }
-  thetas.rwmh[iter,] = theta
-}
 
-set.seed(123456)
-M      = diag(1,2)
-iM     = solve(M)
-tcM    = t(chol(M))
-L      = 100
-eps    = 0.001
-theta  = c(0,0)
-niter  = burnin + N
-thetas.hmc = matrix(0,niter,2)
-for (iter in 1:niter){
-  p      = tcM%*%rnorm(2)
-  theta1 = theta
-  p1     = p
-  for (i in 1:L){
-    run = leapfrog(theta1,p1,eps,iM)
-    p1  = run$p
-    theta1 = run$theta
-  }
-  term1 = post(theta1)/post(theta)
-  term2 = exp(-0.5*t(p1)%*%iM%*%p1)/exp(-0.5*t(p)%*%iM%*%p)
-  accept = min(1,term1*term2)
-  if (runif(1)<accept){
-    theta = theta1
-    p     = - p1
-  }
-  thetas.hmc[iter,]  = theta
-}
+::: {.cell}
+::: {.cell-output-display}
+![](hmc_files/figure-revealjs/unnamed-chunk-8-1.png){width=960}
+:::
+:::
 
-par(mfrow=c(2,6))
-for (i in 1:2){
-  ts.plot(thetas.rwmh[,i],xlab="Iterations",ylab=paste("theta",i,sep=""),main="RW-MH")
-  acf(thetas.rwmh[,i],main="")
-  hist(thetas.rwmh[,i],prob=TRUE,main="")
-}
-for (i in 1:2){
-  ts.plot(thetas.hmc[,i],xlab="Iterations",ylab=paste("theta",i,sep=""),main="HMC")
-  acf(thetas.hmc[,i],main="")
-  hist(thetas.hmc[,i],prob=TRUE,main="")
-}
-```
 
 # Hamiltonian Monte Carlo
 
@@ -170,11 +106,13 @@ Metropolis-Hastings: $P(\theta \to \theta') \ne P(\theta' \to \theta)$
 
 -   Na dinâmica, hamiltoniana, a energia do sistema depende de $\theta$ e de $\rho$:
 
+
 $$
 \begin{equation} 
 H(\theta,M) = U(\theta) + K(\rho) = \text{constante}
 \end{equation}
 $$
+
 
 ## Hamiltonian Monte Carlo
 
@@ -329,3 +267,4 @@ $$
 ## Referências
 
 @neal2011, @betancourt2017conceptual, @Girolami2011, @McElreath2020
+
